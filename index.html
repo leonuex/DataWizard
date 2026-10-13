@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Repair Hub | Schüler helfen Schülern</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-hover: #1b5e20;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-muted: #666666;
+            --border: #e0e0e0;
+            --warning: #ed6c02;
+            --info: #0288d1;
+            --success: #2e7d32;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 25px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.8fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 80px;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-btn {
+            background: #e0e0e0;
+            color: var(--text);
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            width: auto;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .repair-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .repair-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        .repair-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .repair-title {
+            font-weight: bold;
+            font-size: 1.05rem;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .badge.offen { background-color: var(--warning); }
+        .badge.in_bearbeitung { background-color: var(--info); }
+        .badge.erledigt { background-color: var(--success); }
+
+        .repair-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .repair-desc {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .repair-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            width: auto;
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🔧 School Repair Hub</h1>
+        <p>Gemeinsam reparieren statt wegwerfen! Reiche deine defekten Gegenstände ein.</p>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="number" id="stat-total">0</div>
+            <div>Gesamte Anfragen</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" id="stat-open">0</div>
+            <div>Offene Anfragen</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" id="stat-done">0</div>
+            <div>Erfolgreich Repariert</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Formular -->
+        <div class="card">
+            <h2>Neue Anfrage</h2>
+            <form id="repair-form">
+                <div class="form-group">
+                    <label for="title">Gegenstand</label>
+                    <input type="text" id="title" placeholder="z. B. Rucksack-Reißverschluss, Ladekabel" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Kategorie</label>
+                    <select id="category">
+                        <option value="Elektronik">Elektronik & Kabel</option>
+                        <option value="Kleidung">Kleidung & Textilien</option>
+                        <option value="Schulbedarf">Schulbedarf & Bücher</option>
+                        <option value="Sonstiges">Sonstiges</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="owner">Dein Name / Klasse</label>
+                    <input type="text" id="owner" placeholder="z. B. Max (Klasse 9b)" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Was genau ist defekt?</label>
+                    <textarea id="description" placeholder="Beschreibe den Fehler möglichst genau..." required></textarea>
+                </div>
+                <button type="submit">Anfrage Einreichen</button>
+            </form>
+        </div>
+
+        <!-- Anfragen-Übersicht -->
+        <div class="card">
+            <h2>Aktuelle Reparaturen</h2>
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="setFilter('all')">Alle</button>
+                <button class="filter-btn" onclick="setFilter('offen')">Offen</button>
+                <button class="filter-btn" onclick="setFilter('in_bearbeitung')">In Arbeit</button>
+                <button class="filter-btn" onclick="setFilter('erledigt')">Erledigt</button>
+            </div>
+            <div class="repair-list" id="repair-list">
+                <!-- Dynamischer Inhalt via JS -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let repairs = JSON.parse(localStorage.getItem('school_repairs')) || [
+        {
+            id: 1,
+            title: "Kopfhörer Kabelbruch",
+            category: "Elektronik",
+            owner: "Lisa (10a)",
+            description: "Der rechte Ohrhörer hat einen Wackelkontakt am Stecker.",
+            status: "offen",
+            date: "12.10.2026"
+        },
+        {
+            id: 2,
+            title: "Sportbeutel Naht gerissen",
+            category: "Kleidung",
+            owner: "Tim (8c)",
+            description: "Die Kordel ist an der Unterseite ausgerissen.",
+            status: "erledigt",
+            date: "10.10.2026"
+        }
+    ];
+
+    let currentFilter = 'all';
+
+    function saveToLocalStorage() {
+        localStorage.setItem('school_repairs', JSON.stringify(repairs));
+    }
+
+    function renderRepairs() {
+        const listEl = document.getElementById('repair-list');
+        listEl.innerHTML = '';
+
+        const filteredRepairs = repairs.filter(r => {
+            if (currentFilter === 'all') return true;
+            return r.status === currentFilter;
+        });
+
+        if (filteredRepairs.length === 0) {
+            listEl.innerHTML = '<p style="text-align: center; color: #888; padding: 20px;">Keine Anfragen gefunden.</p>';
+        } else {
+            filteredRepairs.forEach(repair => {
+                const item = document.createElement('div');
+                item.className = 'repair-item';
+                
+                let statusText = repair.status === 'offen' ? 'Offen' : 
+                                 repair.status === 'in_bearbeitung' ? 'In Arbeit' : 'Erledigt';
+
+                item.innerHTML = `
+                    <div class="repair-header">
+                        <span class="repair-title">${escapeHtml(repair.title)}</span>
+                        <span class="badge ${repair.status}">${statusText}</span>
+                    </div>
+                    <div class="repair-meta">
+                        📂 ${escapeHtml(repair.category)} | 👤 ${escapeHtml(repair.owner)} | 📅 ${repair.date}
+                    </div>
+                    <div class="repair-desc">${escapeHtml(repair.description)}</div>
+                    <div class="repair-actions">
+                        ${repair.status !== 'in_bearbeitung' && repair.status !== 'erledigt' ? 
+                            <button class="action-btn" onclick="updateStatus(${repair.id}, 'in_bearbeitung')">▶️ Übernehmen</button> : ''}
+                        ${repair.status !== 'erledigt' ? 
+                            <button class="action-btn" style="background: var(--success);" onclick="updateStatus(${repair.id}, 'erledigt')">✅ Als repariert markieren</button> : ''}
+                        <button class="action-btn" style="background: #c62828;" onclick="deleteRepair(${repair.id})">🗑️</button>
+                    </div>
+                `;
+                listEl.appendChild(item);
+            });
+        }
+
+        updateStats();
+    }
+
+    function updateStats() {
+        document.getElementById('stat-total').innerText = repairs.length;
+        document.getElementById('stat-open').innerText = repairs.filter(r => r.status === 'offen').length;
+        document.getElementById('stat-done').innerText = repairs.filter(r => r.status === 'erledigt').length;
+    }
+
+    function updateStatus(id, newStatus) {
+        const repair = repairs.find(r => r.id === id);
+        if (repair) {
+            repair.status = newStatus;
+            saveToLocalStorage();
+            renderRepairs();
+        }
+    }
+
+    function deleteRepair(id) {
+        if (confirm("Möchtest du diese Anfrage wirklich löschen?")) {
+            repairs = repairs.filter(r => r.id !== id);
+            saveToLocalStorage();
+            renderRepairs();
+        }
+    }
+
+    function setFilter(filter) {
+        currentFilter = filter;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        renderRepairs();
+    }
+
+    document.getElementById('repair-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const newRepair = {
+            id: Date.now(),
+            title: document.getElementById('title').value,
+            category: document.getElementById('category').value,
+            owner: document.getElementById('owner').value,
+            description: document.getElementById('description').value,
+            status: 'offen',
+            date: new Date().toLocaleDateString('de-DE')
+        };
+
+        repairs.unshift(newRepair);
+        saveToLocalStorage();
+        renderRepairs();
+
+        this.reset();
+    });
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.innerText = text;
+        return div.innerHTML;
+    }
+
+    // Initiales Rendern beim Laden der Seite
+    renderRepairs();
+</script>
+
+</body>
+</html>
