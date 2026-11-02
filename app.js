@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC92GlUyRJM0nlSEUcR7Jgawp8sD8RrI",
@@ -30,7 +30,7 @@ onSnapshot(q, (snapshot) => {
     if (statusEl) statusEl.innerText = "⚠️ Offline / Nur Lokal";
 });
 
-window.renderRepairs = function() {
+function renderRepairs() {
     const listEl = document.getElementById('repair-list');
     const searchInput = document.getElementById('search-input');
     const searchQuery = searchInput ? searchInput.value.toLowerCase() : '';
@@ -70,10 +70,10 @@ window.renderRepairs = function() {
                 <div class="repair-desc">${escapeHtml(repair.description)}</div>
                 <div class="repair-actions">
                     ${repair.status !== 'in_bearbeitung' && repair.status !== 'erledigt' ? 
-                        <button class="action-btn btn-take" onclick="updateRepairStatus('${repair.id}', 'in_bearbeitung')">▶️ Übernehmen</button> : ''}
+                        <button class="action-btn btn-take" onclick="window.updateRepairStatus('${repair.id}', 'in_bearbeitung')">▶️ Übernehmen</button> : ''}
                     ${repair.status !== 'erledigt' ? 
-                        <button class="action-btn btn-done" onclick="markRepairDone('${repair.id}')">✅ Repariert</button> : ''}
-                    <button class="action-btn btn-delete" onclick="removeRepair('${repair.id}')">🗑️ Löschen</button>
+                        <button class="action-btn btn-done" onclick="window.markRepairDone('${repair.id}')">✅ Repariert</button> : ''}
+                    <button class="action-btn btn-delete" onclick="window.removeRepair('${repair.id}')">🗑️ Löschen</button>
                 </div>
             `;
             listEl.appendChild(item);
@@ -93,38 +93,15 @@ function updateStats() {
     if (doneEl) doneEl.innerText = repairs.filter(r => r.status === 'erledigt').length;
 }
 
-const repairForm = document.getElementById('repair-form');
-if (repairForm) {
-    repairForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        const titleEl = document.getElementById('title');
-        const categoryEl = document.getElementById('category');
-        const ownerEl = document.getElementById('owner');
-        const rewardEl = document.getElementById('reward');
-        const descEl = document.getElementById('description');
-
-        const newRepair = {
-            title: titleEl ? titleEl.value : '',
-            category: categoryEl ? categoryEl.value : '',
-            owner: ownerEl ? ownerEl.value : '',
-            reward: rewardEl ? rewardEl.value : '',
-            description: descEl ? descEl.value : '',
-            status: 'offen',
-            date: new Date().toLocaleDateString('de-DE')
-        };
-
-        try {
-            await addDoc(collection(db, "repairs"), newRepair);
-            repairForm.reset();
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 40, spread: 40, origin: { y: 0.8 } });
-            }
-        } catch (e) {
-            alert("Fehler beim Speichern in der Cloud: " + e.message);
-        }
-    });
+// Global erreichbare Funktionen für HTML-Events bereitstellen
+window.setFilter = function(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderRepairs();
 }
+
+window.renderRepairs = renderRepairs;
 
 window.updateRepairStatus = async function(id, newStatus) {
     try {
@@ -136,7 +113,7 @@ window.updateRepairStatus = async function(id, newStatus) {
 }
 
 window.markRepairDone = async function(id) {
-    await updateRepairStatus(id, 'erledigt');
+    window.updateRepairStatus(id, 'erledigt');
     if (typeof confetti === 'function') {
         confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
     }
@@ -152,12 +129,35 @@ window.removeRepair = async function(id) {
     }
 }
 
-window.setFilter = function(filter, btn) {
-    currentFilter = filter;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    renderRepairs();
-}
+// Formular-Listener
+document.addEventListener('DOMContentLoaded', () => {
+    const repairForm = document.getElementById('repair-form');
+    if (repairForm) {
+        repairForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const newRepair = {
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                owner: document.getElementById('owner').value,
+                reward: document.getElementById('reward').value,
+                description: document.getElementById('description').value,
+                status: 'offen',
+                date: new Date().toLocaleDateString('de-DE')
+            };
+
+            try {
+                await addDoc(collection(db, "repairs"), newRepair);
+                repairForm.reset();
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 40, spread: 40, origin: { y: 0.8 } });
+                }
+            } catch (e) {
+                alert("Fehler beim Speichern in der Cloud: " + e.message);
+            }
+        });
+    }
+});
 
 function escapeHtml(text) {
     if (!text) return '';
