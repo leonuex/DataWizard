@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Repair Hub | Exklusives Portal</title>
+    <title>School Hub | Das schulweite eBay für Hilfe & Reparaturen</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Konfetti-Bibliothek -->
@@ -23,7 +23,6 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border: rgba(255, 255, 255, 0.08);
-            --border-focus: rgba(99, 102, 241, 0.6);
             --warning: #f59e0b;
             --success: #10b981;
             --radius: 20px;
@@ -126,7 +125,7 @@
             box-shadow: 0 0 15px var(--primary-glow);
             background: rgba(15, 23, 42, 0.9);
         }
-        .form-group textarea { resize: vertical; height: 110px; }
+        .form-group textarea { resize: vertical; height: 100px; }
 
         button.btn-primary {
             background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%); 
@@ -200,12 +199,23 @@
         .repair-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; display: flex; gap: 15px; flex-wrap: wrap; }
         .repair-desc { font-size: 0.95rem; color: #cbd5e1; margin-bottom: 18px; line-height: 1.5; }
         
-        .repair-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .repair-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
         .action-btn { padding: 8px 14px; font-size: 0.85rem; font-weight: 600; border-radius: 10px; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s ease; }
         .btn-take { background: rgba(14, 165, 233, 0.1); color: #38bdf8; border-color: rgba(14, 165, 233, 0.2); }
         .btn-take:hover { background: rgba(14, 165, 233, 0.2); }
         .btn-done { background: rgba(16, 185, 129, 0.1); color: #34d399; border-color: rgba(16, 185, 129, 0.2); }
         .btn-done:hover { background: rgba(16, 185, 129, 0.2); }
+        
+        .contact-box {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px dashed rgba(99, 102, 241, 0.4);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: #a5b4fc;
+            width: 100%;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -213,8 +223,8 @@
 <div class="container">
     <header>
         <div>
-            <h1>School Repair Hub</h1>
-            <p>Exklusiver Live-Cloud-Marktplatz für professionelle Reparaturen</p>
+            <h1>School Hub</h1>
+            <p>Das schulweite Marktplatz-Portal für Hilfe, Reparaturen & Tausch</p>
         </div>
         <div class="header-badge" id="sync-status">Cloud Live Sync Aktiv</div>
     </header>
@@ -222,73 +232,77 @@
     <div class="stats-bar">
         <div class="stat-card">
             <div class="number" id="stat-total">0</div>
-            <div class="label">Gesamte Anfragen</div>
+            <div class="label">Gesamte Angebote / Gesuche</div>
         </div>
         <div class="stat-card">
             <div class="number" id="stat-open" style="color: var(--warning);">0</div>
-            <div class="label">Offene Anfragen</div>
+            <div class="label">Offen</div>
         </div>
         <div class="stat-card">
             <div class="number" id="stat-done" style="color: var(--success);">0</div>
-            <div class="label">Erfolgreich Repariert</div>
+            <div class="label">Erfolgreich Vermittelt</div>
         </div>
     </div>
 
     <div class="main-content">
         <!-- Formular -->
         <div class="card">
-            <h2>Neue Anfrage erstellen</h2>
+            <h2>Neues Inserat erstellen</h2>
             <form id="repair-form">
                 <div class="form-group">
-                    <label for="title">Gegenstand / Dienstleistung</label>
-                    <input type="text" id="title" placeholder="z.B. Smartphone-Display, Reißverschluss" required>
+                    <label for="title">Titel (Was wird gesucht / geboten?)</label>
+                    <input type="text" id="title" placeholder="z.B. Grafikkarte reparieren oder Nachhilfe Mathe" required>
                 </div>
                 <div class="form-group">
                     <label for="category">Kategorie</label>
                     <select id="category">
-                        <option value="Elektronik">Elektronik & Handys</option>
-                        <option value="Kleidung">Kleidung & Textilien</option>
-                        <option value="Schulbedarf">Schulbedarf & Sonstiges</option>
+                        <option value="Reparatur">Technik & Reparaturen</option>
+                        <option value="Nachhilfe">Nachhilfe & Lernen</option>
+                        <option value="Sonstiges">Sonstiges & Tausch</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="owner">Name & Klasse / Kontakt</label>
-                    <input type="text" id="owner" placeholder="z.B. Max Mustermann (Klasse 9b)" required>
+                    <label for="owner">Dein Name & Klasse</label>
+                    <input type="text" id="owner" placeholder="z.B. Alex (Klasse 10a)" required>
                 </div>
                 <div class="form-group">
-                    <label for="reward">Belohnung / Bezahlung (optional)</label>
-                    <input type="text" id="reward" placeholder="z.B. 5 Euro oder Kuchen">
+                    <label for="contact">Kontaktadresse (Wird erst beim Annehmen angezeigt)</label>
+                    <input type="text" id="contact" placeholder="z.B. E-Mail oder Raum 204 in Pause" required>
                 </div>
                 <div class="form-group">
-                    <label for="description">Fehlerbeschreibung</label>
-                    <textarea id="description" placeholder="Was genau ist defekt und muss repariert werden?" required></textarea>
+                    <label for="reward">Gegenleistung / Bezahlung (optional)</label>
+                    <input type="text" id="reward" placeholder="z.B. 10 Euro oder Schokolade">
                 </div>
-                <button type="submit" class="btn-primary">Anfrage in Cloud veröffentlichen</button>
+                <div class="form-group">
+                    <label for="description">Genaue Beschreibung</label>
+                    <textarea id="description" placeholder="Beschreibe dein Anliegen detailliert..." required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Inserat auf Marktplatz stellen</button>
             </form>
         </div>
 
-        <!-- Anfragen-Übersicht & Filter -->
+        <!-- Marktplatz-Übersicht & Filter -->
         <div class="card">
-            <h2>Öffentlicher Marktplatz</h2>
+            <h2>Aktiver Schul-Marktplatz</h2>
             
             <div class="toolbar">
-                <input type="text" id="search-input" class="search-input" placeholder="Nach Gegenstand oder Name suchen..." oninput="renderRepairs()">
+                <input type="text" id="search-input" class="search-input" placeholder="Nach Begriff oder Name suchen..." oninput="renderRepairs()">
                 <div class="filter-bar">
                     <button class="filter-btn active" onclick="setFilter('all', this)">Alle</button>
                     <button class="filter-btn" onclick="setFilter('offen', this)">Offen</button>
-                    <button class="filter-btn" onclick="setFilter('in_bearbeitung', this)">In Arbeit</button>
+                    <button class="filter-btn" onclick="setFilter('in_bearbeitung', this)">In Kontakt</button>
                     <button class="filter-btn" onclick="setFilter('erledigt', this)">Erledigt</button>
                 </div>
             </div>
 
             <div class="repair-list" id="repair-list">
-                <p style="text-align: center; color: var(--text-muted); padding: 40px;">Lade Daten aus der Cloud...</p>
+                <p style="text-align: center; color: var(--text-muted); padding: 40px;">Lade Marktplatz-Daten...</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Firebase und Automatischer Filter Logik -->
+<!-- Firebase und Erweiterter Intelligenter Filter -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -308,12 +322,21 @@
     let repairs = [];
     let currentFilter = 'all';
 
-    // Automatischer Filter gegen Spam / unpassende Wörter
-    const blockedWords = ['scheisse', 'scheiße', 'dum", "idiot', 'arsch', 'spam', 'test123', 'wurst', 'blöd', 'fuck', 'shit'];
+    // Erweiterter Filter gegen Schimpfwörter, Beleidigungen und reinen Buchstabensalat / Spam
+    const blockedWords = ['scheisse', 'scheiße', 'idiot', 'arsch', 'fuck', 'shit', 'hure', 'wichser', 'adminlösch'];
     
-    function containsSpam(text) {
+    function isSpamOrInvalid(text) {
+        if (!text || text.trim().length < 3) return true;
         const lower = text.toLowerCase();
-        return blockedWords.some(word => lower.includes(word));
+        
+        // Prüfen auf verbotene Wörter
+        if (blockedWords.some(word => lower.includes(word))) return true;
+
+        // Prüfen auf Buchstabensalat (z.B. "asdfghjk", "xxxxxxxxx")
+        const uniqueChars = new Set(lower.replace(/\s+/g, '')).size;
+        if (lower.length > 6 && uniqueChars <= 2) return true; // Zu wenige unterschiedliche Zeichen
+
+        return false;
     }
 
     const q = query(collection(db, "repairs"));
@@ -346,14 +369,14 @@
         });
 
         if (filtered.length === 0) {
-            listEl.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">Keine Anfragen gefunden.</p>';
+            listEl.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">Keine Inserate gefunden.</p>';
         } else {
             filtered.forEach(repair => {
                 const item = document.createElement('div');
                 item.className = 'repair-item';
                 
                 let statusText = repair.status === 'offen' ? 'Offen' : 
-                                 repair.status === 'in_bearbeitung' ? 'In Arbeit' : 'Erledigt';
+                                 repair.status === 'in_bearbeitung' ? 'In Kontakt' : 'Erledigt';
 
                 item.innerHTML = `
                     <div class="repair-header">
@@ -367,11 +390,18 @@
                         <span>Datum: ${repair.date || 'Gerade eben'}</span>
                     </div>
                     <div class="repair-desc">${escapeHtml(repair.description)}</div>
-                    <div class="repair-actions">
-                        ${repair.status !== 'in_bearbeitung' && repair.status !== 'erledigt' ? 
-                            `<button class="action-btn btn-take" onclick="window.updateRepairStatus('${repair.id}', 'in_bearbeitung')">Übernehmen</button>` : ''}
+                    
+                    ${repair.showContact ? `
+                        <div class="contact-box">
+                            <strong>Kontakt-Info:</strong> ${escapeHtml(repair.contact)}
+                        </div>
+                    ` : ''}
+
+                    <div class="repair-actions" style="margin-top: 12px;">
+                        ${!repair.showContact && repair.status !== 'erledigt' ? 
+                            `<button class="action-btn btn-take" onclick="window.revealContact('${repair.id}')">Annehmen & Kontakt anzeigen</button>` : ''}
                         ${repair.status !== 'erledigt' ? 
-                            `<button class="action-btn btn-done" onclick="window.markRepairDone('${repair.id}')">Als repariert markieren</button>` : ''}
+                            `<button class="action-btn btn-done" onclick="window.markDone('${repair.id}')">Als erledigt markieren</button>` : ''}
                     </div>
                 `;
                 listEl.appendChild(item);
@@ -400,19 +430,24 @@
 
     window.renderRepairs = renderRepairs;
 
-    window.updateRepairStatus = async function(id, newStatus) {
+    window.revealContact = async function(id) {
         try {
             const docRef = doc(db, "repairs", id);
-            await updateDoc(docRef, { status: newStatus });
+            await updateDoc(docRef, { showContact: true, status: 'in_bearbeitung' });
         } catch (e) {
-            console.error("Fehler beim Aktualisieren:", e);
+            console.error("Fehler beim Freigeben:", e);
         }
     }
 
-    window.markRepairDone = async function(id) {
-        window.updateRepairStatus(id, 'erledigt');
-        if (typeof confetti === 'function') {
-            confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
+    window.markDone = async function(id) {
+        try {
+            const docRef = doc(db, "repairs", id);
+            await updateDoc(docRef, { status: 'erledigt' });
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
+            }
+        } catch (e) {
+            console.error("Fehler beim Abschließen:", e);
         }
     }
 
@@ -425,10 +460,11 @@
                 const title = document.getElementById('title').value;
                 const description = document.getElementById('description').value;
                 const owner = document.getElementById('owner').value;
+                const contact = document.getElementById('contact').value;
 
-                // Automatischer Spam- und Unsinns-Filter
-                if (containsSpam(title) || containsSpam(description) || containsSpam(owner)) {
-                    alert("Deine Anfrage enthält unzulässige Begriffe oder Spam und wurde automatisch abgelehnt.");
+                // Intelligenter Spam-, Unsinns- und Schimpfwortfilter
+                if (isSpamOrInvalid(title) || isSpamOrInvalid(description) || isSpamOrInvalid(owner) || isSpamOrInvalid(contact)) {
+                    alert("Dein Inserat enthält unzulässige Begriffe, Spam oder unsinnigen Text und wurde abgelehnt.");
                     return;
                 }
 
@@ -436,9 +472,11 @@
                     title: title,
                     category: document.getElementById('category').value,
                     owner: owner,
+                    contact: contact,
                     reward: document.getElementById('reward').value,
                     description: description,
                     status: 'offen',
+                    showContact: false,
                     date: new Date().toLocaleDateString('de-DE')
                 };
 
